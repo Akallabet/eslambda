@@ -1,11 +1,75 @@
+export const reduce =
+  (predicate = identity, initial) =>
+  (arr = []) => {
+    let index = 0
+    let ret = initial
+
+    while (index < arr.length) {
+      ret = predicate(ret, arr[index])
+      index += 1
+    }
+    return ret
+  }
+
+export const map =
+  (predicate = identity) =>
+  (arr = []) =>
+    reduce((accumulator, value) => [...accumulator, predicate(value, arr)], [])(arr)
+
+export const filter =
+  (predicate = truthy) =>
+  (arr = []) =>
+    reduce(
+      (accumulator, value) => (predicate(value) ? [...accumulator, value] : accumulator),
+      []
+    )(arr)
+
+export const some =
+  (predicate = truthy) =>
+  (arr = []) =>
+    filter(predicate)(arr).length > 0
+
+export const every =
+  (predicate = truthy) =>
+  (arr = []) =>
+    filter(predicate)(arr).length === arr.length
+
+export const forEach =
+  (predicate = noop) =>
+  (arr = []) => {
+    let index = 0
+
+    while (index < arr.length) {
+      predicate(arr[index], index)
+      index += 1
+    }
+  }
+
+export const find =
+  (predicate = falsy) =>
+  (arr = []) => {
+    let index = 0
+    let ret
+
+    while (index < arr.length) {
+      if (predicate(arr[index])) {
+        ret = arr[index]
+        break
+      }
+      index += 1
+    }
+    return ret
+  }
+
 export const pipe =
   (...fns) =>
   (x) =>
-    fns.reduce((y, fn) => fn(y), x)
-export const compose =
+    reduce((y, fn) => fn(y), x)(fns)
+
+export const pipeAsync =
   (...fns) =>
   (x) =>
-    fns.reduceRight((y, fn) => fn(y), x)
+    fns.reduce(async (y, monad) => monad(await y), x)
 
 export const curryObj = (fn, key) => (context) => fn(context)(context[key])
 
@@ -22,11 +86,13 @@ export const pipeCond =
 export const when =
   (...fns) =>
   (x) =>
-    fns.reduce((y, fn) => y && fn(x), x)
+    reduce((y, fn) => y && fn(x), x)(fns)
+
 export const whenOr =
   (...fns) =>
   (x) =>
-    fns.reduce((y, fn) => y || fn(x), x)
+    reduce((y, fn) => y || fn(x), x)(fns)
+
 export const isDefined = (input) => !!input
 export const noop = () => {}
 export const emptyString = () => {}
@@ -83,82 +149,8 @@ export const split =
   (str = '') =>
     str.split(symbol)
 
-export const map =
-  (predicate = identity) =>
-  (arr = []) => {
-    let index = 0
-    let ret = []
-
-    while (index < arr.length) {
-      ret.push(predicate(arr[index], index))
-      index += 1
-    }
-    return ret
-  }
-
-export const reduce =
-  (predicate = identity, initial) =>
-  (arr = []) => {
-    let index = 0
-    let ret = initial
-
-    while (index < arr.length) {
-      ret = predicate(ret, arr[index])
-      index += 1
-    }
-    return ret
-  }
-
-export const find =
-  (predicate = falsy) =>
-  (arr = []) => {
-    let index = 0
-    let ret
-
-    while (index < arr.length) {
-      if (predicate(arr[index])) {
-        ret = arr[index]
-        break
-      }
-      index += 1
-    }
-    return ret
-  }
-
-export const filter =
-  (predicate = truthy) =>
-  (arr = []) => {
-    let index = 0
-    let ret = []
-
-    while (index < arr.length) {
-      if (predicate(arr[index])) ret.push(arr[index])
-      index += 1
-    }
-    return ret
-  }
 export const push = (element) => (arr) => [...arr, element]
 export const max = (arr) => Math.max(...arr)
 export const isGreaterOrEqualThan = (n) => (x) => x >= n
 export const isGreaterThan = (n) => (x) => x > n
 export const extractValues = (arr) => Object.values(arr)
-
-export const some =
-  (predicate = truthy) =>
-  (arr = []) =>
-    filter(predicate)(arr).length > 0
-export const every =
-  (predicate = truthy) =>
-  (arr = []) =>
-    filter(predicate)(arr).length === arr.length
-
-export const forEach =
-  (predicate = noop) =>
-  (arr = []) => {
-    let index = 0
-
-    while (index < arr.length) {
-      predicate(arr[index], index)
-      index += 1
-    }
-  }
