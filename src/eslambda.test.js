@@ -1,4 +1,5 @@
 import {
+  curry,
   curryObj,
   enrich,
   every,
@@ -57,14 +58,6 @@ test.each([
   const isEven = (n) => n % 2 === 0
   expect(when(isTruthy, isEven)(input)).toEqual(output)
 })
-
-// test('when or', () => {
-//   const isEven = (n) => n % 2 === 0
-//   const isOdd = (n) => n % 2 === 1
-//   const isZero = (n) => n === 0
-
-//   expect(whenOr(isOdd)([0, 1, 2, 3])).toEqual([0, 2])
-// })
 
 test.each([
   [
@@ -146,4 +139,10 @@ test('curry object', () => {
   const appendText = () => (text) => `${text}append`
   const partial = pipe(toCurry, curryObj(appendText, 'value'))
   expect(partial()).toEqual('testappend')
+})
+
+test('curry', () => {
+  const toCurry = (x, y, z) => x + y + z
+
+  expect(curry(toCurry)(2)(3)(1)).toEqual(6)
 })

@@ -71,6 +71,11 @@ export const pipeAsync =
   (x) =>
     fns.reduce(async (y, monad) => monad(await y), x)
 
+export const curry =
+  (f, arr = []) =>
+  (...args) =>
+    ((a) => (a.length === f.length ? f(...a) : curry(f, a)))([...arr, ...args])
+
 export const curryObj = (fn, key) => (context) => fn(context)(context[key])
 
 export const pipeCond =
@@ -87,11 +92,6 @@ export const when =
   (...fns) =>
   (x) =>
     reduce((y, fn) => y && fn(x), x)(fns)
-
-export const whenOr =
-  (...fns) =>
-  (x) =>
-    reduce((y, fn) => y || fn(x), x)(fns)
 
 export const isDefined = (input) => !!input
 export const noop = () => {}
