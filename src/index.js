@@ -14,7 +14,7 @@ export const reduce =
 export const map =
   (predicate = identity) =>
   (arr = []) =>
-    reduce((accumulator, value) => [...accumulator, predicate(value, arr)], [])(arr)
+    reduce((accumulator, value, index) => [...accumulator, predicate(value, index)], [])(arr)
 
 export const filter =
   (predicate = truthy) =>

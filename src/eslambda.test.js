@@ -107,6 +107,11 @@ test('map', () => {
   expect(map(addTwo)([1, 2, 3, 4, 5])).toEqual([3, 4, 5, 6, 7])
 })
 
+test('map index', () => {
+  const addTwoAndIndex = (num, index) => num + index + 2
+  expect(map(addTwoAndIndex)([1, 2, 3, 4, 5])).toEqual([3, 5, 7, 9, 11])
+})
+
 test('reduce', () => {
   const sum = (total, num) => total + num
   expect(reduce(sum, 0)([1, 2, 3, 4, 5, 6])).toEqual(21)
