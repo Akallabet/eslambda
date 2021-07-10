@@ -5,7 +5,7 @@ export const reduce =
     let ret = initial
 
     while (index < arr.length) {
-      ret = predicate(ret, arr[index])
+      ret = predicate(ret, arr[index], index, arr)
       index += 1
     }
     return ret
