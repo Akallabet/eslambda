@@ -1,6 +1,6 @@
 {
   "name": "eslambda",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "zero dependencies functional programming utilites for javascript",
   "main": "dist/eslambda.js",
   "scripts": {
