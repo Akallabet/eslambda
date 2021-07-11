@@ -1,8 +1,12 @@
 {
   "name": "eslambda",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "zero dependencies functional programming utilites for javascript",
   "main": "dist/eslambda.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Akallabet/eslambda.git"
+  },
   "scripts": {
     "lint": "eslint src --ext .js -c .eslintrc",
     "prettier": "prettier src/**/*.js",
