@@ -6,4 +6,12 @@ module.exports = {
   globals: {
     __PATH_PREFIX__: '',
   },
+  collectCoverageFrom: ['<rootDir>/src/**/*.js'],
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 85,
+  //     functions: 88,
+  //     lines: 90,
+  //   },
+  // },
 }
