@@ -4,10 +4,13 @@ import {
   enrich,
   every,
   filter,
+  find,
   flatten,
   identity,
   isTruthy,
+  join,
   map,
+  max,
   pipe,
   pipeAsync,
   pipeCond,
@@ -122,6 +125,24 @@ test('filter', () => {
   expect(filter(greaterThanTen)([10, 11, 12, 9, 8, 123, 0, -1])).toEqual([11, 12, 123])
 })
 
+test('find should return "undefined" with an empty input', () => {
+  expect(find((n) => n === 1)([])).toEqual(undefined)
+})
+
+test('find should return the first match with a simple array', () => {
+  expect(find((n) => n === 1)([1, 2, 3, 4, 1])).toEqual(1)
+})
+
+test('find should return the first match with a complex array', () => {
+  expect(
+    find(({ foo }) => foo === 1)([
+      { foo: 1, bar: 2 },
+      { foo: 2, bar: 3 },
+      { foo: 1, bar: 4 },
+    ])
+  ).toEqual({ foo: 1, bar: 2 })
+})
+
 test.each([
   [[10, 11, 12, 9, 8, 123, 0, -1], true],
   [[10, 9, 8, 0, -1], false],
@@ -150,4 +171,16 @@ test('curry', () => {
   const toCurry = (x, y, z) => x + y + z
 
   expect(curry(toCurry)(2)(3)(1)).toEqual(6)
+})
+
+test('join', () => {
+  expect(join('-')([1, 2, 3, 4, 5, 6])).toEqual(`1-2-3-4-5-6`)
+})
+
+test('join with default separator', () => {
+  expect(join()([1, 2, 3, 4, 5, 6])).toEqual(`1,2,3,4,5,6`)
+})
+
+test('max', () => {
+  expect(max([10, 4, 2, 34, 343, 1])).toEqual(343)
 })
