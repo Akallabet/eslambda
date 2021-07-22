@@ -1,4 +1,5 @@
 import {
+  addKey,
   curry,
   curryObj,
   deplete,
@@ -244,6 +245,11 @@ test('extractKeys', () => {
 test('deplete', () => {
   const input = { foo: 'foo', bar: 'bar', test: 'test' }
   expect(deplete('foo')(input)).toEqual({ bar: 'bar', test: 'test' })
+})
+
+test('addKey', () => {
+  const input = { bar: 'bar', test: 'test' }
+  expect(addKey(input, 'foo')('foo')).toEqual({ foo: 'foo', bar: 'bar', test: 'test' })
 })
 
 test('split', () => {
