@@ -32,21 +32,20 @@ export const every =
   (arr = []) =>
     filter(predicate)(arr).length === arr.length
 
-export const forEach =
-  (modifier = noop) =>
-  (arr = []) => {
-    let index = 0
-
-    while (index < arr.length) {
-      modifier(arr[index], index)
-      index += 1
-    }
+export const forEach = (modifier = noop) => {
+  const forEachRec = ([element, ...arr] = [], index = 0) => {
+    if (!element) return
+    modifier(element, index)
+    forEachRec(arr, index + 1)
   }
+  return forEachRec
+}
 
-export const find =
-  (predicate = falsy) =>
-  ([element, ...arr] = []) =>
-    !element ? undefined : (predicate(element) && element) || find(predicate)(arr)
+export const find = (predicate = falsy) => {
+  const findRec = ([element, ...arr] = []) =>
+    !element ? undefined : (predicate(element) && element) || findRec(arr)
+  return findRec
+}
 
 export const pipe =
   (...fns) =>
@@ -130,10 +129,17 @@ export const enrichObject = (fn, key = '') => enrich(objectFrom(fn, key))
 export const hasKey = (key) => (obj) => isTruthy(obj[key])
 export const hasNotKey = (key) => (obj) => isFalsy(obj[key])
 
-export const split =
-  (symbol = '') =>
-  (str = '') =>
-    str.split(symbol)
+export const split = (separator = '') => {
+  const splitRec = ([char, ...str], acc = '', arr = []) =>
+    (!char && isEmpty(arr) && ['']) ||
+    (!char && acc && [...arr, ...acc]) ||
+    (!char && !acc && [...arr]) ||
+    (!separator && splitRec(str, '', [...arr, char])) ||
+    (char === separator && splitRec(str, '', [...arr, acc])) ||
+    splitRec(str, `${acc}${char}`, arr)
+
+  return splitRec
+}
 
 export const push = (element) => (arr) => [...arr, element]
 export const max = reduce((max, num) => (!max || num > max ? num : max))

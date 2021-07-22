@@ -1,14 +1,21 @@
 import {
   curry,
   curryObj,
+  deplete,
   enrich,
   every,
+  extractKeys,
   filter,
   find,
   flatten,
+  forEach,
   identity,
+  ifElse,
+  isEmpty,
+  isNotEmpty,
   isTruthy,
   join,
+  log,
   map,
   max,
   pipe,
@@ -16,6 +23,7 @@ import {
   pipeCond,
   reduce,
   some,
+  split,
   when,
 } from '.'
 
@@ -183,4 +191,71 @@ test('join with default separator', () => {
 
 test('max', () => {
   expect(max([10, 4, 2, 34, 343, 1])).toEqual(343)
+})
+
+test('log', () => {
+  const input = [1, 2, 3, 4, 5]
+  jest.spyOn(console, 'log').mockImplementationOnce(() => {})
+  const callBack = jest.fn((x) => x)
+  const res = log('here', callBack)(input)
+  expect(res).toEqual(input)
+  expect(console.log).toHaveBeenCalledWith('here', input)
+})
+
+test('forEach', () => {
+  const input = [1, 2, 3, 4, 5, 6]
+  const callBack = jest.fn(identity)
+  const res = forEach(callBack)(input)
+  expect(res).toBeUndefined()
+  expect(callBack).toHaveBeenCalledTimes(6)
+  expect(callBack).toHaveBeenNthCalledWith(1, 1, 0)
+  expect(callBack).toHaveBeenNthCalledWith(2, 2, 1)
+  expect(callBack).toHaveBeenNthCalledWith(3, 3, 2)
+  expect(callBack).toHaveBeenNthCalledWith(4, 4, 3)
+  expect(callBack).toHaveBeenNthCalledWith(5, 5, 4)
+  expect(callBack).toHaveBeenNthCalledWith(6, 6, 5)
+})
+
+test('isElse - then', () => {
+  const input = [1, 2, 3, 4, 5]
+  const then = jest.fn(identity)
+  const otherwise = jest.fn(identity)
+  const res = ifElse(isNotEmpty, then)(input)
+  expect(then).toHaveBeenCalledWith(input)
+  expect(otherwise).not.toHaveBeenCalled()
+  expect(res).toEqual(input)
+})
+
+test('isElse - otherwise', () => {
+  const input = [1, 2, 3, 4, 5]
+  const then = jest.fn(identity)
+  const otherwise = jest.fn(identity)
+  const res = ifElse(isEmpty, then, otherwise)(input)
+  expect(then).not.toHaveBeenCalled()
+  expect(otherwise).toHaveBeenCalledWith(input)
+  expect(res).toEqual(input)
+})
+
+test('extractKeys', () => {
+  const input = { foo: 'foo', bar: 'bar', test: 'test' }
+  expect(extractKeys(['foo', 'test'])(input)).toEqual({ foo: 'foo', test: 'test' })
+})
+
+test('deplete', () => {
+  const input = { foo: 'foo', bar: 'bar', test: 'test' }
+  expect(deplete('foo')(input)).toEqual({ bar: 'bar', test: 'test' })
+})
+
+test('split', () => {
+  const input = '1-2-3-4-5-6'
+  expect(split('-')(input)).toEqual(['1', '2', '3', '4', '5', '6'])
+})
+
+test('split - no separator', () => {
+  const input = '1-2-3-4-5-6'
+  expect(split()(input)).toEqual(['1', '-', '2', '-', '3', '-', '4', '-', '5', '-', '6'])
+})
+
+test('split - empty string', () => {
+  expect(split()('')).toEqual([''])
 })
