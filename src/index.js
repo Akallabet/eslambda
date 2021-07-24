@@ -1,13 +1,7 @@
 import { reduce } from './reduce'
 import { identity } from './identity'
 import { pipe } from './pipe'
-import { filter } from './filter'
 import { isEmpty } from './is-empty'
-
-export const every =
-  (predicate = truthy) =>
-  (arr = []) =>
-    filter(predicate)(arr).length === arr.length
 
 export const forEach = (modifier = noop) => {
   const forEachRec = ([element, ...arr] = [], index = 0) => {
@@ -16,12 +10,6 @@ export const forEach = (modifier = noop) => {
     forEachRec(arr, index + 1)
   }
   return forEachRec
-}
-
-export const find = (predicate = falsy) => {
-  const findRec = ([element, ...arr] = []) =>
-    !element ? undefined : (predicate(element) && element) || findRec(arr)
-  return findRec
 }
 
 export const pipeAsync =
@@ -49,9 +37,6 @@ export const when =
 export const isDefined = (input) => !!input
 export const noop = () => {}
 export const emptyString = () => {}
-
-export const falsy = () => false
-export const truthy = () => true
 export const isTruthy = (value) => !!value
 export const isFalsy = (value) => !value
 export const isNumber = (value) => !isNaN(value)

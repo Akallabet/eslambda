@@ -3,9 +3,7 @@ import {
   curryObj,
   deplete,
   enrich,
-  every,
   extractKeys,
-  find,
   flatten,
   forEach,
   ifElse,
@@ -80,33 +78,6 @@ test('enrich', () => {
   const predicate = ({ foo }) => ({ moreFoo: `${foo}-enriched` })
   expect(enrich(predicate)(initial)).toEqual({ foo: 'bar', moreFoo: 'bar-enriched' })
   expect(enrich(() => ({ other: 'thing' }))(initial)).toEqual({ foo: 'bar', other: 'thing' })
-})
-
-test('find should return "undefined" with an empty input', () => {
-  expect(find((n) => n === 1)([])).toEqual(undefined)
-})
-
-test('find should return the first match with a simple array', () => {
-  expect(find((n) => n === 1)([1, 2, 3, 4, 1])).toEqual(1)
-})
-
-test('find should return the first match with a complex array', () => {
-  expect(
-    find(({ foo }) => foo === 1)([
-      { foo: 1, bar: 2 },
-      { foo: 2, bar: 3 },
-      { foo: 1, bar: 4 },
-    ])
-  ).toEqual({ foo: 1, bar: 2 })
-})
-
-test.each([
-  [[10, 11, 12, 9, 8, 123, 0, -1], false],
-  [[10, 9, 8, 0, -1], false],
-  [[11, 12, 13, 123, 1000], true],
-])('every(%o) => %o', (input, output) => {
-  const greaterThanTen = (num) => num > 10
-  expect(every(greaterThanTen)(input)).toEqual(output)
 })
 
 test('curry object', () => {
