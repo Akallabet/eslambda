@@ -1,23 +1,10 @@
-export const curry =
-  (f, arr = []) =>
-  (...args) =>
-    ((a) => (a.length === f.length ? f(...a) : curry(f, a)))([...arr, ...args])
+export { curry } from './curry'
+import { reduce } from './reduce'
+import { identity } from './identity'
+import { pipe } from './pipe'
 
-export const reduce =
-  (modifier = identity, initial) =>
-  (arr = []) => {
-    let index = 0
-    let ret = initial
-
-    while (index < arr.length) {
-      ret = modifier(ret, arr[index], index, arr)
-      index += 1
-    }
-    return ret
-  }
-
-export const map = (modifier = identity) =>
-  reduce((accumulator, value, index) => [...accumulator, modifier(value, index)], [])
+export { reduce }
+export { identity }
 
 export const filter = (predicate = truthy) =>
   reduce((accumulator, value) => (predicate(value) ? [...accumulator, value] : accumulator), [])
@@ -47,11 +34,6 @@ export const find = (predicate = falsy) => {
   return findRec
 }
 
-export const pipe =
-  (...fns) =>
-  (x) =>
-    reduce((y, fn) => fn(y), x)(fns)
-
 export const pipeAsync =
   (...fns) =>
   (x) =>
@@ -77,7 +59,7 @@ export const when =
 export const isDefined = (input) => !!input
 export const noop = () => {}
 export const emptyString = () => {}
-export const identity = (input) => input
+
 export const falsy = () => false
 export const truthy = () => true
 export const isTruthy = (value) => !!value

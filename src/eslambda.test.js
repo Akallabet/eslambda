@@ -1,6 +1,5 @@
 import {
   addKey,
-  curry,
   curryObj,
   deplete,
   enrich,
@@ -17,23 +16,14 @@ import {
   isTruthy,
   join,
   log,
-  map,
   max,
-  pipe,
   pipeAsync,
   pipeCond,
-  reduce,
   some,
   split,
   when,
 } from '.'
-
-test('pipe', () => {
-  const addOne = (n) => n + 1
-  const double = (n) => n * 2
-  const op = pipe(addOne, double)
-  expect(op(2)).toEqual(6)
-})
+import { pipe } from './pipe'
 
 test('pipe async', async () => {
   const addOne = (n) => n + 1
@@ -73,16 +63,6 @@ test.each([
 
 test.each([
   [
-    [1, 2, 3, 4, 5],
-    [2, 4, 6, 8, 10],
-  ],
-])('map %o: double it => %o', (input, output) => {
-  const double = (n) => n * 2
-  expect(map(double)(input)).toEqual(output)
-})
-
-test.each([
-  [
     [1, 2, 3, 4, 5, 6],
     [2, 4, 6],
   ],
@@ -112,21 +92,6 @@ test('enrich', () => {
   const predicate = ({ foo }) => ({ moreFoo: `${foo}-enriched` })
   expect(enrich(predicate)(initial)).toEqual({ foo: 'bar', moreFoo: 'bar-enriched' })
   expect(enrich(() => ({ other: 'thing' }))(initial)).toEqual({ foo: 'bar', other: 'thing' })
-})
-
-test('map', () => {
-  const addTwo = (num) => num + 2
-  expect(map(addTwo)([1, 2, 3, 4, 5])).toEqual([3, 4, 5, 6, 7])
-})
-
-test('map index', () => {
-  const addTwoAndIndex = (num, index) => num + index + 2
-  expect(map(addTwoAndIndex)([1, 2, 3, 4, 5])).toEqual([3, 5, 7, 9, 11])
-})
-
-test('reduce', () => {
-  const sum = (total, num) => total + num
-  expect(reduce(sum, 0)([1, 2, 3, 4, 5, 6])).toEqual(21)
 })
 
 test('filter', () => {
@@ -174,12 +139,6 @@ test('curry object', () => {
   const appendText = () => (text) => `${text}append`
   const partial = pipe(toCurry, curryObj(appendText, 'value'))
   expect(partial()).toEqual('testappend')
-})
-
-test('curry', () => {
-  const toCurry = (x, y, z) => x + y + z
-
-  expect(curry(toCurry)(2)(3)(1)).toEqual(6)
 })
 
 test('join', () => {
