@@ -1,5 +1,10 @@
 import { map } from '../map'
 
+test('map with no modifiers', () => {
+  // const addTwo = (num) => num + 2
+  expect(map()([1, 2, 3, 4, 5])).toEqual([1, 2, 3, 4, 5])
+})
+
 test('map', () => {
   const addTwo = (num) => num + 2
   expect(map(addTwo)([1, 2, 3, 4, 5])).toEqual([3, 4, 5, 6, 7])

@@ -5,24 +5,22 @@ import {
   enrich,
   every,
   extractKeys,
-  filter,
   find,
   flatten,
   forEach,
-  identity,
   ifElse,
-  isEmpty,
-  isNotEmpty,
   isTruthy,
   join,
   log,
   max,
   pipeAsync,
   pipeCond,
-  some,
   split,
   when,
 } from '.'
+import { identity } from './identity'
+import { isEmpty } from './is-empty'
+import { isNotEmpty } from './is-not-empty'
 import { pipe } from './pipe'
 
 test('pipe async', async () => {
@@ -63,16 +61,6 @@ test.each([
 
 test.each([
   [
-    [1, 2, 3, 4, 5, 6],
-    [2, 4, 6],
-  ],
-])('filter %o: only even numbers => %o', (input, output) => {
-  const isEven = (n) => n % 2 == 0
-  expect(filter(isEven)(input)).toEqual(output)
-})
-
-test.each([
-  [
     [
       [1, 2, 3],
       [4, 5, 6],
@@ -94,11 +82,6 @@ test('enrich', () => {
   expect(enrich(() => ({ other: 'thing' }))(initial)).toEqual({ foo: 'bar', other: 'thing' })
 })
 
-test('filter', () => {
-  const greaterThanTen = (num) => num > 10
-  expect(filter(greaterThanTen)([10, 11, 12, 9, 8, 123, 0, -1])).toEqual([11, 12, 123])
-})
-
 test('find should return "undefined" with an empty input', () => {
   expect(find((n) => n === 1)([])).toEqual(undefined)
 })
@@ -115,14 +98,6 @@ test('find should return the first match with a complex array', () => {
       { foo: 1, bar: 4 },
     ])
   ).toEqual({ foo: 1, bar: 2 })
-})
-
-test.each([
-  [[10, 11, 12, 9, 8, 123, 0, -1], true],
-  [[10, 9, 8, 0, -1], false],
-])('some(%o) => %o', (input, output) => {
-  const greaterThanTen = (num) => num > 10
-  expect(some(greaterThanTen)(input)).toEqual(output)
 })
 
 test.each([

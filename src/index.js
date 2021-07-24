@@ -1,18 +1,8 @@
-export { curry } from './curry'
 import { reduce } from './reduce'
 import { identity } from './identity'
 import { pipe } from './pipe'
-
-export { reduce }
-export { identity }
-
-export const filter = (predicate = truthy) =>
-  reduce((accumulator, value) => (predicate(value) ? [...accumulator, value] : accumulator), [])
-
-export const isEmpty = (arr) => arr.length === 0
-export const isNotEmpty = (arr) => arr.length > 0
-
-export const some = (predicate = truthy) => pipe(filter(predicate), isNotEmpty)
+import { filter } from './filter'
+import { isEmpty } from './is-empty'
 
 export const every =
   (predicate = truthy) =>
