@@ -1,53 +1,19 @@
 import {
   addKey,
-  curryObj,
   deplete,
   enrich,
   extractKeys,
   flatten,
-  forEach,
   ifElse,
   isTruthy,
-  join,
   log,
   max,
-  pipeAsync,
-  pipeCond,
   split,
   when,
 } from '.'
 import { identity } from './identity'
 import { isEmpty } from './is-empty'
 import { isNotEmpty } from './is-not-empty'
-import { pipe } from './pipe'
-
-test('pipe async', async () => {
-  const addOne = (n) => n + 1
-  const timesTwo = (n) => n * 2
-
-  const addOneAsync = (n) => Promise.resolve(addOne(n))
-
-  const timesTwoAsync = (n) => Promise.resolve(timesTwo(n))
-
-  expect(await pipeAsync(addOneAsync, timesTwoAsync)(10)).toEqual(22)
-})
-
-test('pipe cond', () => {
-  const greaterThan10 = (n) => n > 10
-  const double = (n) => n * 2
-  const first = () => 'first'
-  const second = () => 'second'
-  const third = () => 'third'
-
-  const threshold = pipeCond(
-    [greaterThan10, first, double],
-    [greaterThan10, second, double],
-    [greaterThan10, third, identity]
-  )
-  expect(threshold(11)).toEqual('first')
-  expect(threshold(8)).toEqual('second')
-  expect(threshold(4)).toEqual('third')
-})
 
 test.each([
   [2, true],
@@ -79,22 +45,6 @@ test('enrich', () => {
   expect(enrich(predicate)(initial)).toEqual({ foo: 'bar', moreFoo: 'bar-enriched' })
   expect(enrich(() => ({ other: 'thing' }))(initial)).toEqual({ foo: 'bar', other: 'thing' })
 })
-
-test('curry object', () => {
-  const toCurry = () => ({ context: { a: '1' }, value: 'test' })
-  const appendText = () => (text) => `${text}append`
-  const partial = pipe(toCurry, curryObj(appendText, 'value'))
-  expect(partial()).toEqual('testappend')
-})
-
-test('join', () => {
-  expect(join('-')([1, 2, 3, 4, 5, 6])).toEqual(`1-2-3-4-5-6`)
-})
-
-test('join with default separator', () => {
-  expect(join()([1, 2, 3, 4, 5, 6])).toEqual(`1,2,3,4,5,6`)
-})
-
 test('max', () => {
   expect(max([10, 4, 2, 34, 343, 1])).toEqual(343)
 })
@@ -106,20 +56,6 @@ test('log', () => {
   const res = log('here', callBack)(input)
   expect(res).toEqual(input)
   expect(console.log).toHaveBeenCalledWith('here', input)
-})
-
-test('forEach', () => {
-  const input = [1, 2, 3, 4, 5, 6]
-  const callBack = jest.fn(identity)
-  const res = forEach(callBack)(input)
-  expect(res).toBeUndefined()
-  expect(callBack).toHaveBeenCalledTimes(6)
-  expect(callBack).toHaveBeenNthCalledWith(1, 1, 0)
-  expect(callBack).toHaveBeenNthCalledWith(2, 2, 1)
-  expect(callBack).toHaveBeenNthCalledWith(3, 3, 2)
-  expect(callBack).toHaveBeenNthCalledWith(4, 4, 3)
-  expect(callBack).toHaveBeenNthCalledWith(5, 5, 4)
-  expect(callBack).toHaveBeenNthCalledWith(6, 6, 5)
 })
 
 test('isElse - then', () => {

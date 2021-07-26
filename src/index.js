@@ -3,39 +3,12 @@ import { identity } from './identity'
 import { pipe } from './pipe'
 import { isEmpty } from './is-empty'
 
-export const forEach = (modifier = noop) => {
-  const forEachRec = ([element, ...arr] = [], index = 0) => {
-    if (!element) return
-    modifier(element, index)
-    forEachRec(arr, index + 1)
-  }
-  return forEachRec
-}
-
-export const pipeAsync =
-  (...fns) =>
-  (x) =>
-    reduce(async (y, monad) => monad(await y), x)(fns)
-
-export const curryObj = (fn, key) => (context) => fn(context)(context[key])
-
-export const pipeCond =
-  (...fns) =>
-  (x) => {
-    let res = x
-    for (const [cond, then, otherwise] of fns) {
-      if (cond(res)) return then(res)
-      res = otherwise(res)
-    }
-  }
-
 export const when =
   (...fns) =>
   (x) =>
     reduce((y, fn) => y && fn(x), x)(fns)
 
 export const isDefined = (input) => !!input
-export const noop = () => {}
 export const emptyString = () => {}
 export const isTruthy = (value) => !!value
 export const isFalsy = (value) => !value
@@ -46,8 +19,6 @@ export const log =
     console.log(label, parse(args))
     return args
   }
-export const join = (separator = ',') =>
-  reduce((str, element) => `${str}${str ? separator : ''}${element}`, '')
 
 export const flatten = reduce(
   (ret, res) => [...ret, ...(Array.isArray(...res) ? flatten(res) : res)],

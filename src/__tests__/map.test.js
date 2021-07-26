@@ -1,12 +1,13 @@
 import { map } from '../map'
 
+const double = (n) => n * 2
+const addTwo = (num) => num + 2
+
 test('map with no modifiers', () => {
-  // const addTwo = (num) => num + 2
   expect(map()([1, 2, 3, 4, 5])).toEqual([1, 2, 3, 4, 5])
 })
 
 test('map', () => {
-  const addTwo = (num) => num + 2
   expect(map(addTwo)([1, 2, 3, 4, 5])).toEqual([3, 4, 5, 6, 7])
 })
 
@@ -21,6 +22,5 @@ test.each([
     [2, 4, 6, 8, 10],
   ],
 ])('map %o: double it => %o', (input, output) => {
-  const double = (n) => n * 2
   expect(map(double)(input)).toEqual(output)
 })
