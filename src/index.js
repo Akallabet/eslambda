@@ -1,24 +1,12 @@
 import { reduce } from './reduce'
 import { identity } from './identity'
 import { pipe } from './pipe'
-import { isEmpty } from './is-empty'
-
-export const when =
-  (...fns) =>
-  (x) =>
-    reduce((y, fn) => y && fn(x), x)(fns)
 
 export const isDefined = (input) => !!input
 export const emptyString = () => {}
 export const isTruthy = (value) => !!value
 export const isFalsy = (value) => !value
 export const isNumber = (value) => !isNaN(value)
-export const log =
-  (label, parse = identity) =>
-  (args) => {
-    console.log(label, parse(args))
-    return args
-  }
 
 export const flatten = reduce(
   (ret, res) => [...ret, ...(Array.isArray(...res) ? flatten(res) : res)],
@@ -56,21 +44,6 @@ export const objectFrom = (fn, key = '') => pipe(fn, makeObject(key))
 export const enrichObject = (fn, key = '') => enrich(objectFrom(fn, key))
 export const hasKey = (key) => (obj) => isTruthy(obj[key])
 export const hasNotKey = (key) => (obj) => isFalsy(obj[key])
-
-export const split = (separator = '') => {
-  const splitRec = ([char, ...str], acc = '', arr = []) =>
-    (!char && isEmpty(arr) && ['']) ||
-    (!char && acc && [...arr, ...acc]) ||
-    (!char && !acc && [...arr]) ||
-    (!separator && splitRec(str, '', [...arr, char])) ||
-    (char === separator && splitRec(str, '', [...arr, acc])) ||
-    splitRec(str, `${acc}${char}`, arr)
-
-  return splitRec
-}
-
-export const push = (element) => (arr) => [...arr, element]
-export const max = reduce((max, num) => (!max || num > max ? num : max))
 export const isGreaterOrEqualThan = (n) => (x) => x >= n
 export const isGreaterThan = (n) => (x) => x > n
 export const extractValues = (arr) => Object.values(arr)
