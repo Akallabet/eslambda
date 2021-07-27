@@ -1,4 +1,4 @@
-import { isTruthy } from '..'
+import { isTruthy } from '../is-truthy'
 import { when } from '../when'
 
 test.each([
