@@ -1,8 +1,8 @@
 {
   "name": "eslambda",
-  "version": "1.4.0",
+  "version": "1.6.1",
   "description": "zero dependencies functional programming utilites for javascript",
-  "main": "dist/eslambda.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/Akallabet/eslambda.git"
@@ -11,12 +11,11 @@
     "lint": "eslint src --ext .js -c .eslintrc",
     "prettier": "prettier src/**/*.js",
     "lint:fix": "eslint src --ext .js -c .eslintrc --fix",
-    "test": "jest --watch --maxWorkers=25%",
-    "test:ci": "jest --collect-coverage --maxWorkers=50%",
-    "build:es": "BABEL_ENV=es babel src/index.js -o dist/eslambda.es.js",
-    "build:cjs": "BABEL_ENV=cjs babel src/index.js -o dist/eslambda.js",
-    "build": "npm run build:es && npm run build:cjs",
-    "clean": "rimraf dist",
+    "test": "jest --watch",
+    "test:ci": "jest --collect-coverage",
+    "build:es": "BABEL_ENV=es babel src/*.js -d dist",
+    "build": "npm run build:es",
+    "clean": "rimraf dist cjs",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "files": [

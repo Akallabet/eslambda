@@ -1,148 +1,44 @@
-export const curry =
-  (f, arr = []) =>
-  (...args) =>
-    ((a) => (a.length === f.length ? f(...a) : curry(f, a)))([...arr, ...args])
-
-export const reduce =
-  (modifier = identity, initial) =>
-  (arr = []) => {
-    let index = 0
-    let ret = initial
-
-    while (index < arr.length) {
-      ret = modifier(ret, arr[index], index, arr)
-      index += 1
-    }
-    return ret
-  }
-
-export const map = (modifier = identity) =>
-  reduce((accumulator, value, index) => [...accumulator, modifier(value, index)], [])
-
-export const filter = (predicate = truthy) =>
-  reduce((accumulator, value) => (predicate(value) ? [...accumulator, value] : accumulator), [])
-
-export const isEmpty = (arr) => arr.length === 0
-export const isNotEmpty = (arr) => arr.length > 0
-
-export const some = (predicate = truthy) => pipe(filter(predicate), isNotEmpty)
-
-export const every =
-  (predicate = truthy) =>
-  (arr = []) =>
-    filter(predicate)(arr).length === arr.length
-
-export const forEach = (modifier = noop) => {
-  const forEachRec = ([element, ...arr] = [], index = 0) => {
-    if (!element) return
-    modifier(element, index)
-    forEachRec(arr, index + 1)
-  }
-  return forEachRec
-}
-
-export const find = (predicate = falsy) => {
-  const findRec = ([element, ...arr] = []) =>
-    !element ? undefined : (predicate(element) && element) || findRec(arr)
-  return findRec
-}
-
-export const pipe =
-  (...fns) =>
-  (x) =>
-    reduce((y, fn) => fn(y), x)(fns)
-
-export const pipeAsync =
-  (...fns) =>
-  (x) =>
-    reduce(async (y, monad) => monad(await y), x)(fns)
-
-export const curryObj = (fn, key) => (context) => fn(context)(context[key])
-
-export const pipeCond =
-  (...fns) =>
-  (x) => {
-    let res = x
-    for (const [cond, then, otherwise] of fns) {
-      if (cond(res)) return then(res)
-      res = otherwise(res)
-    }
-  }
-
-export const when =
-  (...fns) =>
-  (x) =>
-    reduce((y, fn) => y && fn(x), x)(fns)
-
-export const isDefined = (input) => !!input
-export const noop = () => {}
-export const emptyString = () => {}
-export const identity = (input) => input
-export const falsy = () => false
-export const truthy = () => true
-export const isTruthy = (value) => !!value
-export const isFalsy = (value) => !value
-export const isNumber = (value) => !isNaN(value)
-export const log =
-  (label, parse = identity) =>
-  (args) => {
-    console.log(label, parse(args))
-    return args
-  }
-export const join = (separator = ',') =>
-  reduce((str, element) => `${str}${str ? separator : ''}${element}`, '')
-
-export const flatten = reduce(
-  (ret, res) => [...ret, ...(Array.isArray(...res) ? flatten(res) : res)],
-  []
-)
-
-export const ifElse =
-  (condition, then, otherwise = identity) =>
-  (...input) =>
-    condition(...input) ? then(...input) : otherwise(...input)
-
-export const extractKey = (key) => (object) => object[key]
-export const extractKeys = (keys) => (object) =>
-  reduce(
-    (ret, key) => ({
-      ...ret,
-      [key]: object[key],
-    }),
-    {}
-  )(keys)
-
-export const makeObject = (key) => (args) => ({ [key]: args })
-export const enrich = (fn) => (args) => ({ ...args, ...fn({ ...args }) })
-export const addKey =
-  (context, key = '') =>
-  (obj) => ({ ...context, [key]: obj })
-
-export const deplete =
-  (key = '') =>
-  (obj) => {
-    delete obj[key]
-    return { ...obj }
-  }
-export const objectFrom = (fn, key = '') => pipe(fn, makeObject(key))
-export const enrichObject = (fn, key = '') => enrich(objectFrom(fn, key))
-export const hasKey = (key) => (obj) => isTruthy(obj[key])
-export const hasNotKey = (key) => (obj) => isFalsy(obj[key])
-
-export const split = (separator = '') => {
-  const splitRec = ([char, ...str], acc = '', arr = []) =>
-    (!char && isEmpty(arr) && ['']) ||
-    (!char && acc && [...arr, ...acc]) ||
-    (!char && !acc && [...arr]) ||
-    (!separator && splitRec(str, '', [...arr, char])) ||
-    (char === separator && splitRec(str, '', [...arr, acc])) ||
-    splitRec(str, `${acc}${char}`, arr)
-
-  return splitRec
-}
-
-export const push = (element) => (arr) => [...arr, element]
-export const max = reduce((max, num) => (!max || num > max ? num : max))
-export const isGreaterOrEqualThan = (n) => (x) => x >= n
-export const isGreaterThan = (n) => (x) => x > n
-export const extractValues = (arr) => Object.values(arr)
+export { addKey } from './add-key'
+export { curryObj } from './curry-object'
+export { curry } from './curry'
+export { deplete } from './deplete'
+export { enrichObject } from './enrich-object'
+export { enrich } from './enrich'
+export { every } from './every'
+export { extractKey } from './extract-key'
+export { extractKeys } from './extract-keys'
+export { falsy } from './falsy'
+export { filter } from './filter'
+export { find } from './find'
+export { flatten } from './flatten'
+export { forEach } from './for-each'
+export { getValues } from './get-values'
+export { hasKey } from './has-key'
+export { hasNotKey } from './has-not-key'
+export { identity } from './identity'
+export { ifElse } from './if-else'
+export { isDefined } from './is-defined'
+export { isEmpty } from './is-empty'
+export { isEqualTo } from './is-equal-to'
+export { isFalsy } from './is-falsy'
+export { isGreaterOrEqualThan } from './is-greater-or-equal-than'
+export { isGreaterThan } from './is-greater-than'
+export { isNotEmpty } from './is-not-empty'
+export { isNumber } from './is-number'
+export { isTruthy } from './is-truthy'
+export { join } from './join'
+export { log } from './log'
+export { makeObject } from './make-object'
+export { map } from './map'
+export { max } from './max'
+export { noop } from './noop'
+export { objectFrom } from './object-from'
+export { pipeAsync } from './pipe-async'
+export { pipeCond } from './pipe-cond'
+export { pipe } from './pipe'
+export { push } from './push'
+export { reduce } from './reduce'
+export { some } from './some'
+export { split } from './split'
+export { truthy } from './truthy'
+export { when } from './when'
