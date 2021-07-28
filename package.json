@@ -1,8 +1,8 @@
 {
   "name": "eslambda",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "zero dependencies functional programming utilites for javascript",
-  "main": "dist",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/Akallabet/eslambda.git"
