@@ -4,6 +4,10 @@ beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementationOnce(() => {})
 })
 
+afterEach(() => {
+  jest.clearAllMocks()
+})
+
 const input = [1, 2, 3, 4, 5]
 
 test('log without modifier', () => {

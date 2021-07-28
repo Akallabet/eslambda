@@ -13,3 +13,16 @@ test('split with no separator', () => {
 test('split with empty string', () => {
   expect(split()('')).toEqual([''])
 })
+
+test('split string with multiple chars per separator', () => {
+  expect(split('/')('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR')).toEqual([
+    'rnbqkbnr',
+    'pppppppp',
+    '8',
+    '8',
+    '8',
+    '8',
+    'PPPPPPPP',
+    'RNBQKBNR',
+  ])
+})
