@@ -1,6 +1,6 @@
 {
   "name": "eslambda",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "zero dependencies functional programming utilites for javascript",
   "main": "dist/index.js",
   "repository": {
